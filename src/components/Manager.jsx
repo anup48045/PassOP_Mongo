@@ -8,6 +8,7 @@ const Manager = () => {
     const [passwordArray, setpasswordArray] = useState([])
     const ref = useRef()
     const passwordRef = useRef()
+    const url = "https://passop-mongo-ff4i.onrender.com"
     const copyText = (text) => {
         toast('Copied to clipboard!')
         navigator.clipboard.writeText(text)
@@ -26,7 +27,7 @@ const Manager = () => {
     }
 
     const getPasswords = async (params) => {
-        let req = await fetch("http://localhost:3000/", {method:"GET", headers:{"Content-Type":"application/json"}})
+        let req = await fetch(url, {method:"GET", headers:{"Content-Type":"application/json"}})
         let passwords = await req.json()
         setpasswordArray(passwords)
     }
@@ -41,7 +42,7 @@ const Manager = () => {
         if(form.site.length>3 && form.username.length>3 && form.password.length>3){
         
         const newPassword = {...form, id:uuidv4()};
-        await fetch("http://localhost:3000/", {method:"POST", headers:{"Content-Type":"application/json"},
+        await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"},
             body: JSON.stringify(newPassword) })
         setpasswordArray([...passwordArray, newPassword])
         toast("Password saved successfully")  
@@ -54,7 +55,7 @@ const Manager = () => {
     const deletePassword = async (id) => {
         if(confirm("Are you sure want to delete this password!")){
             setpasswordArray(passwordArray.filter(item=>item.id!==id))
-            let res = await fetch("http://localhost:3000/", {method:"DELETE", headers:{"Content-Type":"application/json"},
+            let res = await fetch(url, {method:"DELETE", headers:{"Content-Type":"application/json"},
             body: JSON.stringify({id}) })
             toast('Password deleted!');
     }
@@ -63,7 +64,7 @@ const Manager = () => {
         setform({...passwordArray.filter(i=>i.id===id)[0], id:id})
 
          // first delete password with that id
-        await fetch("http://localhost:3000/", {method:"DELETE" , headers:{"Content-Type":"application/json"}, body:JSON.stringify({id: form.id})})
+        await fetch(url, {method:"DELETE" , headers:{"Content-Type":"application/json"}, body:JSON.stringify({id: form.id})})
         setpasswordArray(passwordArray.filter(item=>item.id!==id))
     }
     const handleChange = (e) => {
